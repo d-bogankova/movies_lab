@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Last Movies</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+            integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+    <?php if(isset($_REQUEST['action']) && 'query' == $_REQUEST['action']): ?>
+        <h1 class="text-primary text-center">Query Mode</h1>
+        <?php foreach ($messages as $message): ?>
+            <div class="alert alert-primary" role="alert">
+                <?php echo $message; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <h1 class="text-primary text-center">Last Movies</h1>
+        <div class="row">
+            <?php if (!empty($data)): ?><?php foreach ($data as $movie): ?>
+                <div class="col-sm">
+                    <div class="card" style="width: 18rem;"><img class="card-img-top"
+                                                                 src="data/posters<?php echo $movie->getPosterPath() ?>">
+                        <div class="card-body"><h4 class="card-title"><?php echo $movie->gettitle() ?></h4>
+                            <h5 class="card-title"><?php echo $movie->getOriginalTitle() ?></h5>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#movieModal_<?php echo $movie->getId() ?>"> More Information
+                            </button>
+                        </div>
+                    </div>
+                </div>         <!-- Modal -->
+                <div class="modal fade" id="movieModal_<?php echo $movie->getId() ?>" tabindex="-1" role="dialog"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header"><h4 class="modal-title"
+                                                          id="<?php $movie->getId() ?>"><?php echo $movie->getTitle() ?></h4></div>
+                            <div class="modal-body"><p><?php foreach ($movie->getGenres() as $key=>$value){
+                                        echo $value->getName();
+                                        if(count($movie->getGenres())>$key+1) {
+                                            echo ', ';
+                                        }
+                                    } ?></p>
+                                <hr>
+                                <p><?php echo $movie->getOverview() ?></p>
+                                <hr>
+                                <p>Release Date: <?php echo $movie->getReleaseDate() ?></p></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>      <?php endforeach; ?><?php endif; ?>     </div>
+    <?php endif; ?>
+
+</div>
+</body>
+</html>
