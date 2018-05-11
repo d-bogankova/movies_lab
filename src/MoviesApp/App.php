@@ -64,6 +64,7 @@ class App
             $genreProvider,
             $tmdbApiClient,
             $this->config['daysToParse'],
+            $this->config['localization'],
             $this->config['path']['data']
         );
 

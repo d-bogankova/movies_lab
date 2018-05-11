@@ -96,7 +96,7 @@ class TmdbApiClient
 
         for ($i = 1; $i < 999; $i++) {
 
-            $response = $this->curl->execute(self::IMDB_API_URI . '/movie/now_playing?api_key=' . $this->apiKey . '&page=' . $i);
+            $response = $this->curl->execute(self::IMDB_API_URI . '/movie/now_playing?api_key=' . '&language=' . $config->['localization'] . $this->apiKey . '&page=' . $i);
             $curlInfo = $this->curl->getLastRequestInfo();
 
             if (self::HTTP_OK == $curlInfo['http_code']) {

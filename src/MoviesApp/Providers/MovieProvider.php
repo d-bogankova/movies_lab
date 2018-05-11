@@ -47,6 +47,11 @@ class MovieProvider
     /**
      * @var string
      */
+    private $localization;
+
+    /**
+     * @var string
+     */
     private $dataPath;
 
     /**
@@ -65,6 +70,7 @@ class MovieProvider
         GenreProvider $genreProvider,
         TmdbApiClient $tmdbApiClient,
         $daysToParse,
+        $localization,
         $dataPath
     ) {
         $this->genreNormalizer = $genreNormalizer;
@@ -73,6 +79,7 @@ class MovieProvider
         $this->genreProvider = $genreProvider;
         $this->tmdbApiClient = $tmdbApiClient;
         $this->daysToParse = $daysToParse;
+        $this->localization = $localization;
         $this->dataPath = $dataPath;
     }
 
