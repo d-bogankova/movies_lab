@@ -35,7 +35,7 @@
                             <h5 class="card-title"><?php echo $movie->getOriginalTitle() ?></h5>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#movieModal_<?php echo $movie->getId() ?>"> More Information
+                                    data-target="#movieModal_<?php echo $movie->getId() ?>"> Подробнее
                             </button>
                         </div>
                     </div>
@@ -55,9 +55,11 @@
                                 <hr>
                                 <p><?php echo $movie->getOverview() ?></p>
                                 <hr>
-                                <p>Release Date: <?php echo $movie->getReleaseDate() ?></p></div>
+                            <p>Дата выхода: <?php echo $movie->getReleaseDate() ?></p>
+                            <hr>
+                            <p>Длительность: <?php echo $movie->getRuntime() ?> мин.</p></div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                             </div>
                         </div>
                     </div>

@@ -80,6 +80,11 @@ class MovieNormalizer implements NormalizerInterface
             $data['vote_average'] = $movie->getVoteAverage();
         }
 
+        if (method_exists($movie, 'getRuntime')) {
+
+            $data['runtime'] = $movie->getRuntime();
+        }
+
         if (method_exists($movie, 'getDateCreated')) {
 
             $data['date_created'] = $movie->getDateCreated();
@@ -160,6 +165,11 @@ class MovieNormalizer implements NormalizerInterface
         if (isset($params['vote_average'])) {
 
             $movie->setVoteAverage($params['vote_average']);
+        }
+
+        if (isset($params['runtime'])) {
+
+            $movie->setRuntime($params['runtime']);
         }
 
         if (isset($params['date_created'])) {

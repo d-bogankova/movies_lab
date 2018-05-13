@@ -2,7 +2,9 @@
 
 namespace MoviesApp\Tmdb;
 
+use MoviesApp\Exceptions\ApiException;
 use MoviesApp\Curl\Curl;
+use MoviesApp\Logger\Logger;
 
 /**
  * Class TmdbApiClient
@@ -32,6 +34,16 @@ class TmdbApiClient
      * @var string
      */
     private $apiKey;
+
+    /**
+     * @var
+     */
+    private $locale;
+
+    /**
+     * @var
+     */
+    private $logger;
 
     /**
      * @return Curl
@@ -66,14 +78,50 @@ class TmdbApiClient
     }
 
     /**
-     * Class constructor
-     * @param Curl $curl
-     * @param $apiKey
+     * @return mixed
      */
-    function __construct(Curl $curl, $apiKey) {
+    public function getLocale()
+    {
+        return $this->locale;
+    }
 
-        $this->curl = $curl;
-        $this->apiKey = $apiKey;
+    /**
+     * @param mixed $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
+    /**
+     * @param mixed $logger
+     */
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * TmdbApiClient constructor.
+     * @param Curl $curl
+     * @param string $apiKey
+     * @param string $locale
+     * @param Logger $logger
+     */
+    function __construct(Curl $curl, $apiKey, $locale, $logger) {
+
+        $this->setCurl($curl);
+        $this->setApiKey($apiKey);
+        $this->setLocale($locale);
+        $this->setLogger($logger);
     }
 
     /**
@@ -96,7 +144,7 @@ class TmdbApiClient
 
         for ($i = 1; $i < 999; $i++) {
 
-            $response = $this->curl->execute(self::IMDB_API_URI . '/movie/now_playing?api_key=' . '&language=' . $config->['localization'] . $this->apiKey . '&page=' . $i);
+            $response = $this->curl->execute(self::IMDB_API_URI . '/movie/now_playing?api_key=' . $this->apiKey . '&page=' . $i . '&language=' . $this->locale);
             $curlInfo = $this->curl->getLastRequestInfo();
 
             if (self::HTTP_OK == $curlInfo['http_code']) {
@@ -129,9 +177,9 @@ class TmdbApiClient
      */
     function getGenres() {
 
-        $data = array();
+        $data = [];
 
-        $response = $this->curl->execute(self::IMDB_API_URI . '/genre/movie/list?api_key=' . $this->apiKey);
+        $response = $this->curl->execute(self::IMDB_API_URI . '/genre/movie/list?api_key=' . $this->apiKey . '&language=' . $this->locale);
         $curlInfo = $this->curl->getLastRequestInfo();
 
         if (self::HTTP_OK == $curlInfo['http_code']) {
@@ -143,6 +191,26 @@ class TmdbApiClient
         return $data;
     }
 
+
+    /**
+     * @param $movieId
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function getMovieDetails($movieId){
+
+        $response = $this->curl->execute(self::IMDB_API_URI . '/movie/' . $movieId . '?api_key=' . $this->apiKey . '&language=' . $this->locale);
+        $curlInfo = $this->curl->getLastRequestInfo();
+
+        if (self::HTTP_OK == $curlInfo['http_code']) {
+
+            $response = json_decode($response);
+        } else {
+            throw new ApiException('Unexpected API response.');
+        }
+
+        return $response;
+    }
 
     /**
      * @param $urlSuffix

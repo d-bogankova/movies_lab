@@ -17,5 +17,6 @@ return [
     ],
 
     'tmdbApiKey' => '',
+    'locale' => 'ru',
     'daysToParse' => 7
 ];

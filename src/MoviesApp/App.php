@@ -41,9 +41,14 @@ class App
 
         $curl = new Curl();
 
-        $tmdbApiClient = new TmdbApiClient($curl, $this->config['tmdbApiKey']);
-
         $logger = new Logger($this->config['path']['logs'] . '/log.txt');
+
+        $tmdbApiClient = new TmdbApiClient(
+            $curl,
+            $this->config['tmdbApiKey'],
+            $this->config['locale'],
+            $logger
+        );
 
         $movieNormalizer = new MovieNormalizer();
         $genreNormalizer = new GenreNormalizer();
@@ -64,7 +69,6 @@ class App
             $genreProvider,
             $tmdbApiClient,
             $this->config['daysToParse'],
-            $this->config['localization'],
             $this->config['path']['data']
         );
 

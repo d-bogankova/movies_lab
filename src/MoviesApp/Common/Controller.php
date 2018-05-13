@@ -1,6 +1,7 @@
 <?php
 
 namespace MoviesApp\Common;
+use MoviesApp\Exceptions\ApiException;
 use MoviesApp\Logger\Logger;
 use MoviesApp\Providers\GenreProvider;
 use MoviesApp\Providers\MovieProvider;
@@ -39,7 +40,11 @@ class Controller
 
         $messages[] = 'INFO: Genres are updated.';
 
-        $this->movieProvider->updateMovies();
+        try {
+            $this->movieProvider->updateMovies();
+        } catch (ApiException $e){
+            $messages[] = 'ERROR: ' . $e->getMessage();
+        }
 
         $messages[] = 'INFO: Movies are updated.';
 

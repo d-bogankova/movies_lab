@@ -47,11 +47,6 @@ class MovieProvider
     /**
      * @var string
      */
-    private $localization;
-
-    /**
-     * @var string
-     */
     private $dataPath;
 
     /**
@@ -70,7 +65,6 @@ class MovieProvider
         GenreProvider $genreProvider,
         TmdbApiClient $tmdbApiClient,
         $daysToParse,
-        $localization,
         $dataPath
     ) {
         $this->genreNormalizer = $genreNormalizer;
@@ -79,7 +73,6 @@ class MovieProvider
         $this->genreProvider = $genreProvider;
         $this->tmdbApiClient = $tmdbApiClient;
         $this->daysToParse = $daysToParse;
-        $this->localization = $localization;
         $this->dataPath = $dataPath;
     }
 
@@ -115,7 +108,8 @@ class MovieProvider
                      video = %b, 
                      vote_count = %u, 
                      vote_average = %f, 
-                     adult = %b, 
+                     adult = %b,
+                     runtime = %u,
                      release_date = '%s' WHERE id = %u",
                     $movie->getExternalId(),
                     $this->db->real_escape_string($movie->getTitle()),
@@ -129,8 +123,9 @@ class MovieProvider
                     $movie->getVoteCount(),
                     $movie->getVoteAverage(),
                     $movie->getAdult(),
-                    $this->db->real_escape_string($movie->getReleaseDate(),
-                    $movie->getId())
+                    $movie->getRuntime(),
+                    $this->db->real_escape_string($movie->getReleaseDate()),
+                    $movie->getId()
                 )
             );
 
@@ -141,9 +136,9 @@ class MovieProvider
             $date = date('Y-m-d H:i:s');
             $this->db->customQuery(sprintf(
                     "INSERT INTO movies
-                 (external_id, title, original_title, original_language, overview, popularity, poster_path, backdrop_path, video, vote_count, vote_average, adult, release_date, date_created)
+                 (external_id, title, original_title, original_language, overview, popularity, poster_path, backdrop_path, video, vote_count, vote_average, adult, runtime, release_date, date_created)
                  VALUES
-                 (%u,'%s','%s','%s','%s',%f,'%s','%s',%b,%u,%f,%b,'%s','%s')",
+                 (%u,'%s','%s','%s','%s',%f,'%s','%s',%b,%u,%f,%b,%u,'%s','%s')",
                     $movie->getExternalId(),
                     $this->db->real_escape_string($movie->getTitle()),
                     $this->db->real_escape_string($movie->getOriginalTitle()),
@@ -156,6 +151,7 @@ class MovieProvider
                     $movie->getVoteCount(),
                     $movie->getVoteAverage(),
                     $movie->getAdult(),
+                    $movie->getRuntime(),
                     $this->db->real_escape_string($movie->getReleaseDate()),
                     $date
                 )
@@ -246,6 +242,10 @@ class MovieProvider
             $movie->setVideo($externalMovie->video);
             $movie->setVoteCount($externalMovie->vote_count);
             $movie->setVoteAverage($externalMovie->vote_average);
+
+            $movieDetails = $this->tmdbApiClient->getMovieDetails($externalMovie->id);
+
+            $movie->setRuntime($movieDetails->runtime);
 
             foreach ($externalMovie->genre_ids as $genreExternalId) {
 

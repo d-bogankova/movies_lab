@@ -75,6 +75,11 @@ class Movie
     private $genres = [];
 
     /**
+     * @var
+     */
+    private $runtime;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -328,5 +333,21 @@ class Movie
     public function addGenre(Genre $genre)
     {
         $this->genres[] = $genre;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRuntime()
+    {
+        return $this->runtime;
+    }
+
+    /**
+     * @param mixed $runtime
+     */
+    public function setRuntime($runtime)
+    {
+        $this->runtime = intval($runtime);
     }
 }
