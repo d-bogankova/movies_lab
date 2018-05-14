@@ -85,6 +85,7 @@ CREATE TABLE `movies` (
   `vote_count` int(11) unsigned NOT NULL,
   `vote_average` float NOT NULL,
   `adult` tinyint(1) NOT NULL,
+  `runtime` int(11) unsigned NOT NULL,
   `release_date` date NOT NULL,
   `date_created` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -109,4 +110,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-04 13:05:45
+-- Dump completed on 2018-05-14 15:05:57
